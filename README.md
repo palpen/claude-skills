@@ -4,44 +4,107 @@ Custom [Claude Code](https://claude.com/claude-code) skills for personal product
 
 ## Skills
 
-### `/tax-prep` — Canadian Tax Preparation Assistant
+| Skill | Description |
+|-------|-------------|
+| [`/record`](#record--screen-recording) | Screen record your terminal or entire screen using native macOS `screencapture`. Zero dependencies. |
+| [`/tax-prep`](#tax-prep--canadian-tax-preparation) | Scan, classify, and organize tax documents for CRA filing. |
+| [`/cpush`](#cpush--commit--push) | Commit and push, no PR. |
+| [`/shipit`](#shipit--commit-push-and-pr) | Commit, push, and create a PR in one command. |
+| [`/sync`](#sync--rebase-on-latest-main) | Pull latest main and rebase the current feature branch. |
+| [`/orient`](#orient--clone--branch-status) | Quick status dashboard: clone, branch, port, dev server, changes. |
+
+---
+
+### `/record` — Screen Recording
+
+Record your terminal window or entire screen using the built-in macOS `screencapture` utility. No external dependencies required.
+
+- **Terminal mode** — records only the current terminal window
+- **Full screen mode** — records the entire desktop
+- Auto-stops after a configurable duration (default 30s)
+- Saves as `.mov`, playable natively on macOS
+
+```
+/record
+```
+
+### `/tax-prep` — Canadian Tax Preparation
 
 Reads all your tax documents from a folder, classifies them against the full CRA taxonomy, cross-references for missing documents, flags audit risks and optimization opportunities, and generates a comprehensive filing plan with a step-by-step checklist.
 
-**What it does:**
-1. Scans and classifies every document (T4, T5, T3, T2202, receipts, etc.)
-2. Identifies missing documents based on your filing situation
-3. Flags red flags (over-contributions, foreign property reporting, audit triggers)
-4. Finds optimization opportunities (RRSP strategy, pension splitting, spousal credit allocation, medical expense window)
-5. Generates a detailed income/deduction/credit summary with tax estimates
-6. Produces a step-by-step filing checklist with every required form and schedule
-7. Creates an accountant-ready summary document
-
-**Usage:**
 ```
 /tax-prep
 ```
 
-Then point it at your folder of scanned tax documents (PDFs, images).
+### `/cpush` — Commit & Push
+
+Commit and push without creating a PR. Stages files, generates a conventional commit message from the diff, and pushes to the current feature branch. Use when you want to save progress without opening a PR yet.
+
+```
+/cpush
+```
+
+### `/shipit` — Commit, Push, and PR
+
+Full commit-push-PR pipeline in one shot. Stages files, generates a conventional commit message from the diff, pushes to the current feature branch, and opens a PR to main (or reports the existing one). Refuses to commit to main, never force-pushes, never skips hooks.
+
+```
+/shipit
+```
+
+### `/sync` — Rebase on Latest Main
+
+Fetches latest main and rebases the current feature branch on top of it. Reports how many commits behind you are, attempts to resolve conflicts automatically, and aborts cleanly if it can't. Refuses to start if there are uncommitted changes.
+
+```
+/sync
+```
+
+### `/orient` — Clone & Branch Status
+
+Prints a compact dashboard showing which clone you're in, current branch, configured port, whether the dev server is running, uncommitted changes, and commits ahead of main. Great for re-orienting after switching terminals.
+
+```
+/orient
+```
 
 ## Installation
 
-### Option 1: Symlink (recommended)
-
-Clone this repo, then symlink each skill into your Claude Code skills directory:
+Clone the repo and ask Claude to install the skills for you:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-skills.git
-ln -sf "$(pwd)/claude-skills/tax-prep" ~/.claude/skills/tax-prep
+git clone https://github.com/palpen/claude-skills.git
 ```
 
-### Option 2: Copy
+Then in Claude Code, paste:
 
-Copy the skill directory directly:
+```
+Symlink every skill directory in ~/Desktop/claude-skills/ into ~/.claude/skills/ so they're available as slash commands. Use ln -s for each one. Skip any that are already installed.
+```
+
+That's it. Skills are symlinked, so pulling the latest from the repo automatically updates them.
+
+### Manual install
+
+If you prefer to do it yourself:
 
 ```bash
-cp -r tax-prep ~/.claude/skills/tax-prep
+# symlink all skills at once
+for skill in claude-skills/*/; do
+  name=$(basename "$skill")
+  ln -sf "$(pwd)/$skill" ~/.claude/skills/"$name"
+done
 ```
+
+Or install a single skill:
+
+```bash
+ln -sf "$(pwd)/claude-skills/record" ~/.claude/skills/record
+```
+
+### Verify
+
+Run `/record` or `/tax-prep` in Claude Code. If the skill shows up in the slash command list, it's installed.
 
 ## Adding New Skills
 
