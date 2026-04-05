@@ -12,6 +12,8 @@ Custom [Claude Code](https://claude.com/claude-code) skills for personal product
 | [`/shipit`](#shipit--commit-push-and-pr) | Commit, push, and create a PR in one command. |
 | [`/sync`](#sync--rebase-on-latest-main) | Pull latest main and rebase the current feature branch. |
 | [`/orient`](#orient--clone--branch-status) | Quick status dashboard: clone, branch, port, dev server, changes. |
+| [`/spawn`](#spawn--create-a-feature-clone) | Create a new feature clone with branch, port, env, and deps. |
+| [`/teardown`](#teardown--remove-a-merged-clone) | Safely remove a feature clone after its branch is merged. |
 
 ---
 
@@ -66,6 +68,25 @@ Prints a compact dashboard showing which clone you're in, current branch, config
 
 ```
 /orient
+```
+
+### `/spawn` — Create a Feature Clone
+
+Creates a new isolated clone of the current repo for parallel feature development. Clones to `<parent>/<repo>--<name>`, creates a `feat/<name>` branch, copies env files with a unique port, and installs dependencies. Two modes:
+
+- **Direct:** `/spawn auth-refactor` — creates one clone for the named feature
+- **Analyze:** `/spawn` with no args — scans the repo structure, suggests logical workstream splits, and lets you pick which to create
+
+```
+/spawn auth-refactor
+```
+
+### `/teardown` — Remove a Merged Clone
+
+Safely removes a feature clone after verifying its branch was merged into main. Checks for uncommitted work, unpushed commits, and running dev servers before deleting. Requires explicit confirmation; unmerged branches require typing the clone name as double confirmation.
+
+```
+/teardown backend
 ```
 
 ## Installation
