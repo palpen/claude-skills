@@ -91,41 +91,34 @@ Safely removes a feature clone after verifying its branch was merged into main. 
 
 ## Installation
 
-Clone the repo and ask Claude to install the skills for you:
-
 ```bash
 git clone https://github.com/palpen/claude-skills.git
+cd claude-skills
+make install
 ```
 
-Then in Claude Code, paste:
+That's it. Skills are symlinked into `~/.claude/skills/`, so pulling the latest from the repo automatically updates them.
 
-```
-Symlink every skill directory in ~/Desktop/claude-skills/ into ~/.claude/skills/ so they're available as slash commands. Use ln -s for each one. Skip any that are already installed.
-```
-
-That's it. Skills are symlinked, so pulling the latest from the repo automatically updates them.
-
-### Manual install
-
-If you prefer to do it yourself:
+### Other commands
 
 ```bash
-# symlink all skills at once
-for skill in claude-skills/*/; do
-  name=$(basename "$skill")
-  ln -sf "$(pwd)/$skill" ~/.claude/skills/"$name"
-done
+make install     # symlink all skills into ~/.claude/skills/
+make uninstall   # remove symlinks (doesn't delete the repo)
+make list        # show available skills
 ```
 
-Or install a single skill:
+### Update
 
 ```bash
-ln -sf "$(pwd)/claude-skills/record" ~/.claude/skills/record
+cd claude-skills
+git pull
 ```
+
+Symlinks point to the repo, so new content is picked up immediately. If a new skill directory was added, run `make install` again to link it.
 
 ### Verify
 
-Run `/record` or `/tax-prep` in Claude Code. If the skill shows up in the slash command list, it's installed.
+Run any skill (e.g., `/orient`) in Claude Code. If it shows up in the slash command list, it's installed.
 
 ## Adding New Skills
 
