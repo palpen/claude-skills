@@ -51,9 +51,59 @@ If no feature name was provided, go to **Step 3 (Analyze mode)**.
 
 ### 3. Analyze mode — Suggest workstream splits
 
-Scan the repo to suggest logical workstream boundaries:
+#### 3a. Ask about investigation depth
 
-1. **Check for AGENTS.md** — look for `AGENTS.md` at the repo root. If it exists, search for a "Workstream Boundaries" section or similar. Parse any defined workstreams.
+Use `AskUserQuestion` to ask:
+```
+I can suggest workstream lanes two ways:
+
+  1. Quick — heuristic split based on directory structure and project type
+  2. Deep — investigate routes, actions, services, DB schema, and shared
+     surfaces to propose domain-based lanes (supply/demand style splits
+     that minimize cross-team file collisions)
+
+Which approach? (1/2)
+```
+
+If the user picks **1**, go to **Step 3c (Quick heuristics)**.
+If the user picks **2**, go to **Step 3b (Deep investigation)**.
+
+#### 3b. Deep investigation
+
+Perform a thorough codebase analysis to find domain-based ownership boundaries:
+
+1. **Map all routes/pages** — find every page entry point and what it renders
+2. **Map all server actions / API routes** — list every exported function and which routes call them
+3. **Map services and data access** — which DB tables does each service touch
+4. **Map components** — which pages use which components, identify shared vs. single-owner components
+5. **Identify cross-cutting files** — files that multiple domains must touch (types, schemas, shared utils)
+6. **Find the seams** — look for natural domain boundaries where files cluster together with minimal cross-references. Prefer domain splits (by user persona or business concern) over layer splits (frontend/backend/infra). Layer splits cause more merge conflicts because features span layers.
+
+Produce a brief analysis:
+```
+Codebase analysis for <repo-name>:
+
+  Tables: <list>
+  Routes: <list with brief purpose>
+  Action files: <list with function counts>
+
+  Suggested domain lanes:
+    1. --<name>  : <one-line description>
+       Owns: <key files>
+    2. --<name>  : <one-line description>
+       Owns: <key files>
+    3. --<name>  : <one-line description>
+       Owns: <key files>
+
+  Shared surfaces (collision risk): <files that span lanes>
+  Main cross-lane seam: <the #1 file/module where lanes overlap>
+```
+
+Then go to **Step 3d (User choice)**.
+
+#### 3c. Quick heuristics
+
+1. **Check for CLAUDE.md / AGENTS.md** — look for a "Workstream Lanes" or "Workstream Boundaries" section. If defined, parse and use those.
 
 2. **Check for monorepo markers** — look for:
    - Multiple `package.json` files (not in `node_modules`)
@@ -66,24 +116,31 @@ Scan the repo to suggest logical workstream boundaries:
    - For monorepos: suggest one clone per package/workspace
    - For any repo: look for natural directory clusters that map to concerns
 
-4. **Check existing clones** — list `BASE_DIR/<base-repo-name>--*` directories to see what already exists. Don't suggest duplicates.
+Then go to **Step 3d (User choice)**.
 
-5. **Present suggestions** using `AskUserQuestion`:
+#### 3d. User choice
+
+1. **Check existing clones** — list `BASE_DIR/<base-repo-name>--*` directories to see what already exists. Don't suggest duplicates.
+
+2. **Present suggestions** using `AskUserQuestion`:
    ```
    Suggested workstreams for <base-repo-name>:
 
    Existing clones:
      --backend (feat/backend, port 3002)
-     --frontend-ui (feat/frontend-ui, port 3001)
 
    Suggested new clones:
-     1. --auth        -> feat/auth (authentication, session management)
-     2. --testing     -> feat/testing (test infrastructure, coverage)
+     1. --<name>  -> feat/<name> (<description>)
+     2. --<name>  -> feat/<name> (<description>)
+     3. --<name>  -> feat/<name> (<description>)
 
-   Enter numbers to create (e.g., "1,2"), a custom name, or "skip":
+   Enter numbers to create (e.g., "1,2"), custom names (e.g., "supply,demand,platform"),
+   or "skip":
    ```
 
-6. Proceed to Step 4 for each selected clone.
+   If the user enters custom names instead of numbers, use those names for the clones instead of the suggested names. This lets users override the naming while still benefiting from the analysis.
+
+3. Proceed to Step 4 for each selected clone.
 
 ### 4. Direct mode — Create the clone
 
