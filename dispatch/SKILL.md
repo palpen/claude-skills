@@ -225,7 +225,7 @@ Cross-lane   DISPATCH-NOTES.md  "<idea title>"
 
 Next steps:
   cd <clone-path> and open a new Claude Code session
-  Run /status to monitor progress
+  Run /lanes to monitor progress
 ─────────────────────────────────────────────────────────
 ```
 

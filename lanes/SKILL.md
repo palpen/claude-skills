@@ -1,5 +1,5 @@
 ---
-name: status
+name: lanes
 version: 0.1.0
 description: |
   Check progress across all workstream clones. Shows branch, dirty files,
