@@ -1,0 +1,45 @@
+readme where?
+
+---
+
+do it
+
+---
+
+/cpush
+
+---
+
+should entire be commited
+
+---
+
+research what i should do with this .entire folder
+
+---
+
+do it
+
+---
+
+ultrathink ok claude you might be confused. you're making changes to two repos claude-skills and platy. figure out what exactly should go in each. why is there an .entire directory in claude-skills does it belong there/
+
+---
+
+ultrathink when was that .entire folder added to claude skills
+
+---
+
+so what should we do
+
+---
+
+should it be removed instead?
+
+---
+
+show me me the git hooks
+
+---
+
+use the .entire folder the way it was intended to be used. why just gitignore it then
