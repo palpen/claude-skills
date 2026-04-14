@@ -14,6 +14,9 @@ Custom [Claude Code](https://claude.com/claude-code) skills for personal product
 | [`/orient`](#orient--clone--branch-status) | Quick status dashboard: clone, branch, port, dev server, changes. |
 | [`/spawn`](#spawn--create-a-feature-clone) | Create a new feature clone with branch, port, env, and deps. |
 | [`/teardown`](#teardown--remove-a-merged-clone) | Safely remove a feature clone after its branch is merged. |
+| [`/dispatch`](#dispatch--triage-ideas-to-lanes) | Triage ideas to workstream lanes and write BRIEF.md assignments. |
+| [`/lanes`](#lanes--workstream-dashboard) | Read-only dashboard of all workstream clones — branch, brief, backlog, status. |
+| [`/disk-usage`](#disk-usage--disk-space-audit) | Scan home directory for large files and reclaimable caches. Report only, never deletes. |
 
 ---
 
@@ -88,6 +91,32 @@ Safely removes a feature clone after verifying its branch was merged into main. 
 ```
 /teardown backend
 ```
+
+### `/dispatch` — Triage Ideas to Lanes
+
+Collect ideas from the user, map each to the right workstream clone based on lane ownership defined in CLAUDE.md, and write assignments. Active ideas get a full `BRIEF.md` in the target clone with files-to-touch and acceptance criteria. If a lane already has an active brief, new ideas queue to `BACKLOG.md`. Cross-lane ideas go to `DISPATCH-NOTES.md` in the main checkout. Always syncs CLAUDE.md to target clones before writing.
+
+```
+/dispatch add search, fix auth bug, improve feed
+```
+
+### `/lanes` — Workstream Dashboard
+
+Read-only dashboard showing the state of all `<repo>--*` workstream clones. For each clone: current branch, commits ahead of main, active brief status, backlog count, dirty files, and last commit. Flags anomalies like branch mismatches, stale CLAUDE.md, or rebase-in-progress. Works from the main checkout or any clone.
+
+```
+/lanes
+```
+
+### `/disk-usage` — Disk Space Audit
+
+Scans the home directory for large folders, development artifacts (node_modules, .next, venvs), and reclaimable caches. Produces a structured report with safe-to-clear candidates and the exact commands to run. **Never deletes anything** — report only.
+
+```
+/disk-usage
+```
+
+---
 
 ## Installation
 
